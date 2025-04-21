@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirim Pesan Spesial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .icon-container {
+            position: absolute;
+            top: -30px;
+            right: 20px;
+            font-size: 2.5rem;
+            transform: rotate(10deg);
+            transition: all 0.3s ease;
+        }
+        
+        .icon-container:hover {
+            transform: rotate(-10deg) scale(1.1);
+        }
+        
+        .content {
+            padding: 25px 20px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option-btn {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option-btn:hover {
+            background-color: #f1f3f5;
+            border-color: #ced4da;
+            transform: translateY(-2px);
+        }
+        
+        .option-icon {
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+        
+        .response {
+            display: none;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .response p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #495057;
+        }
+        
+        .response-icon {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .message-form {
+            display: none;
+        }
+        
+        textarea {
+            width: 100%;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 0.95rem;
+            min-height: 120px;
+            margin-bottom: 15px;
+            resize: none;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+        
+        .send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3);
+        }
+        
+        .back-btn {
+            background-color: transparent;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: underline;
+            margin-top: 15px;
+            padding: 5px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .floating-hearts {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: float 3s ease-in infinite;
+            opacity: 0;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(30deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Animasi untuk respon */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .heart-beat {
+            animation: heartBeat 1.5s infinite;
+        }
+        
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.1); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.1); }
+            70% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon-container">✨</div>
+            <h1>Katakan Dengan Tulus</h1>
+            <p>Ungkapkan apa yang kamu rasakan</p>
+        </div>
+        
+        <div class="content">
+            <div id="optionsContainer" class="options">
+                <button class="option-btn" data-option="1">
+                    <span class="option-icon">😔</span>
+                    Dia terlihat marah/benci pada saya
+                </button>
+                <button class="option-btn" data-option="2">
+                    <span class="option-icon">😟</span>
+                    Dia sepertinya sedang ada masalah
+                </button>
+                <button class="option-btn" data-option="3">
+                    <span class="option-icon">💭</span>
+                    Saya ingin mengungkapkan perasaan saya
+                </button>
+            </div>
+            
+            <div id="responseContainer" class="response">
+                <span class="response-icon">💌</span>
+                <p id="responseText"></p>
+            </div>
+            
+            <div id="messageForm" class="message-form">
+                <textarea id="messageInput" placeholder="Tulis pesanmu disini..."></textarea>
+                <button id="sendBtn" class="send-btn">
+                    <span>Kirim ke WhatsApp</span>
+                    <span>📱</span>
+                </button>
+                <button id="backBtn" class="back-btn">Kembali ke pilihan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const responses = {
+            1: [
+                "Terkadang, orang yang paling peduli justru terlihat marah karena mereka takut kehilanganmu. Mungkin ini saatnya kamu bicara dari hati ke hati...",
+                "Setiap tatapan yang kamu pikir penuh kebencian, mungkin sebenarnya penuh kekhawatiran. Beranikan diri untuk menyelami perasaannya yang sebenarnya.",
+                "Jarak antara benci dan cinta itu tipis. Saat kamu mendekatinya dengan ketulusan, kamu akan melihat sisinya yang lain."
+            ],
+            2: [
+                "Kekuatanmu bukan untuk menyelesaikan masalahnya, tapi untuk membuatnya merasa tidak sendirian menghadapi masalah itu.",
+                "Kadang yang dibutuhkan bukan solusi, tapi seseorang yang cukup peduli untuk mendengarkan. Jadilah telinga yang setia untuknya.",
+                "Kepedulianmu adalah obat untuk luka yang tak terlihat. Berikan dia ruang, tapi juga pastikan dia tahu bahwa kamu selalu ada."
+            ],
+            3: [
+                "Keberanian terindah adalah ketika kamu jujur tentang perasaanmu. Apapun hasilnya, hatimu akan lebih ringan.",
+                "Ungkapkan dengan lembut, tanpa beban atau harapan. Biarkan perasaanmu mengalir seperti sungai yang tenang.",
+                "Tatap matanya saat kamu mengungkapkan isi hatimu. Mata tidak pernah berbohong, dan hati yang tulus selalu terlihat."
+            ]
+        };
+        
+        const specialEmojis = ["✨", "💫", "💕", "🌸", "☁️", "🌈", "🦋"];
+        
+        // Function to generate random number between min and max
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        // Function to create floating hearts/special emojis
+        function createFloatingElement() {
+            const element = document.createElement("div");
+            element.className = "floating-hearts";
+            element.innerText = specialEmojis[Math.floor(Math.random() * specialEmojis.length)];
+            
+            // Random position
+            const leftPos = getRandomInt(0, 100);
+            element.style.left = `${leftPos}%`;
+            
+            // Random animation duration
+            const duration = getRandomInt(3, 6);
+            element.style.animationDuration = `${duration}s`;
+            
+            document.querySelector('.container').appendChild(element);
+            
+            // Remove element after animation
+            setTimeout(() => {
+                element.remove();
+            }, duration * 1000);
+        }
+        
+        // Start creating floating elements periodically
+        setInterval(createFloatingElement, 800);
+        
+        document.querySelectorAll('.option-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const option = this.getAttribute('data-option');
+                const responseArray = responses[option];
+                const randomResponse = responseArray[Math.floor(Math.random() * responseArray.length)];
+                
+                document.getElementById('responseText').innerText = randomResponse;
+                document.getElementById('responseContainer').style.display = 'block';
+                document.getElementById('responseContainer').classList.add('fade-in');
+                
+                // Show message form after a short delay
+                setTimeout(() => {
+                    document.getElementById('messageForm').style.display = 'block';
+                    document.getElementById('messageForm').classList.add('fade-in');
+                    document.getElementById('optionsContainer').style.display = 'none';
+                }, 1000);
+            });
+        });
+        
+        document.getElementById('backBtn').addEventListener('click', function() {
+            document.getElementById('responseContainer').style.display = 'none';
+            document.getElementById('messageForm').style.display = 'none';
+            document.getElementById('optionsContainer').style.display = 'flex';
+            document.getElementById('messageInput').value = '';
+        });
+        
+        document.getElementById('sendBtn').addEventListener('click', function() {
+            const message = document.getElementById('messageInput').value.trim();
+            if (message) {
+                // Format for WhatsApp
+                const encodedMessage = encodeURIComponent(message);
+                window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+                
+                // Show heart beat animation
+                this.classList.add('heart-beat');
+                setTimeout(() => {
+                    this.classList.remove('heart-beat');
+                }, 1500);
+                
+                // Create extra floating elements for celebration
+                for (let i = 0; i < 10; i++) {
+                    setTimeout(createFloatingElement, i * 300);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
